@@ -1,0 +1,294 @@
+/*
+ * Hydra Build file.
+ * @author Chris Cameron
+ *
+ */
+ 
+ apply plugin: 'eclipse'
+ apply plugin: 'java'
+ apply plugin: 'maven'
+ apply plugin: 'application'
+ 
+ sourceCompatibility = 1.7
+ targetCompatibility = 1.7
+
+
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.5'
+}
+
+buildscript {
+    repositories {
+    
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
+        classpath 'org.ajoberstar:gradle-git:0.12.0'
+    }
+}
+
+ext {
+    HydraVersion = "1.0"
+}
+
+repositories {
+    //EARG maven repo.
+    maven {
+        url 'https://bitbucket.org/EARG-builder/maven-repo/raw/master/releases/'
+    }
+    maven {
+        url 'https://bitbucket.org/EARG-builder/maven-repo/raw/master/snapshots/'
+    }
+    mavenLocal()
+    mavenCentral()
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+	from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+
+
+//Grab git information.
+import org.ajoberstar.grgit.Grgit
+public boolean isGitAvailable() {
+    def repo
+    try
+    {
+        repo = Grgit.open(rootProject.file('.'))
+        return true
+    }
+    catch(Exception e)
+    {
+        println 'Not building SATFC from a git repository, versioning will be limited.'
+        return false
+    }
+}
+
+public String getGitName() {
+    if (isGitAvailable()) {
+        def repo = Grgit.open(rootProject.file('.'))
+        def branch = repo.branch.current.name
+        def sha = repo.head().abbreviatedId
+        return branch+'-'+sha
+    } else {
+        return 'nogit'
+    }
+}
+
+public String getGitInfo() {
+    if (isGitAvailable()) {
+        def repo = Grgit.open(rootProject.file('.'))
+        return "buildTime=" + new Date().toString() + System.lineSeparator() +
+                "sha=" + repo.head().id + System.lineSeparator() +
+                "branch=" + repo.branch.current.name + System.lineSeparator() +
+                "committer=" + repo.head().committer.name + System.lineSeparator() +
+                "commitTime=" + repo.head().date + System.lineSeparator() +
+                "message=" + repo.head().fullMessage + System.lineSeparator()
+    } else {
+        return "No git available"
+    }
+}
+
+
+
+apply plugin: 'maven-publish'
+
+
+ //ANT projects
+// def smacantproject = '/Users/Chris/Documents/Summer-2014/smac'
+//ant.importBuild("${smacantproject}/build.xml"){ smacantTarget ->
+//  'smac-' + smacantTarget
+//}
+ //def aeatkantproject = '/Users/Chris/Documents/Summer-2014/AEATK'
+//ant.importBuild("${aeatkantproject}/build.xml"){ aeatkantTarget ->
+//  'aeatk-' + aeatkantTarget
+//}
+
+//smac-deploy-release.dependsOn "aeatk-deploy-release" 
+
+//compile.dependsOn "${smacantproject}/deploy-release"
+//compile.dependsOn"deploy-release")
+
+
+// In this section you declare the dependencies for your production and test code
+dependencies {
+
+	//ANT dependecies
+//	compile fileTree(dir: "${smacantproject}/dist/lib", include: "smac.jar")
+//	compile fileTree(dir: "${aeatkantproject}/dist", include: "*.jar")
+
+    //All the product dependencies.
+    
+    // Lab software dependencies
+    compile 'ca.ubc.cs.beta:fastrf:1.10.01-development' 
+    compile 'ca.ubc.cs.beta:aeatk:forbidden-logging-aeatk'
+    compile 'ca.ubc.cs.beta:aeatk:forbidden-logging-aeatk:sources'
+    compile 'ca.ubc.cs.beta:mysqldbtae:mysqldbtae-v0.92.00b'
+    compile 'ca.ubc.cs.beta:mysqldbtae:mysqldbtae-v0.92.00b:sources'
+    //{
+    //exclude group : 'ca.ubc.cs.beta', name: 'aeatk', version:'2.08.01-development-de3ee6617d5c'}
+    compile 'ca.ubc.cs.beta:smac:smac-v2.10.02-development'
+    compile 'ca.ubc.cs.beta:smac:smac-v2.10.02-development:sources'
+    compile 'ca.ubc.cs.beta:jDTs:jDTs'
+    compile 'ca.ubc.cs.beta:jParFor:jParFor'
+    compile 'ca.ubc.cs.beta:matlab:matlab'
+    compile 'ca.ubc.cs.beta:Zilla:1.7-development-df10b4e'
+    compile 'ca.ubc.cs.beta:Zilla:1.7-development-df10b4e:sources'
+//    compile 'ca.ubc.cs.beta:Zilla:1.7-development-eb8be85'
+//    compile 'ca.ubc.cs.beta:Zilla:1.7-development-eb8be85:sources'
+    
+    //compile project('zilla')
+
+    
+    // Third-party dependencies
+    compile 'org.slf4j:slf4j-api:1.7.5'
+    compile 'commons-codec:commons-codec:1.7'
+    compile 'commons-collections:commons-collections:3.2.1'
+    compile 'org.apache.commons:commons-math3:3.2'
+    compile 'org.apache.commons:commons-lang3:3.3.1'
+    compile 'org.apache.commons:commons-collections4:4.0'
+    compile 'au.com.bytecode:opencsv:2.4'
+    compile 'com.google.guava:guava:18.0'
+    compile 'org.slf4j:slf4j-parent:1.7.5'
+    compile 'ch.qos.logback:logback-access:1.1.2'
+    compile 'ch.qos.logback:logback-classic:1.1.2'
+    compile 'ch.qos.logback:logback-core:1.1.2'
+    compile "com.fasterxml.jackson.core:jackson-databind:2.3.1"
+    compile "com.fasterxml.jackson.core:jackson-core:2.3.1"
+    compile "com.fasterxml.jackson.core:jackson-annotations:2.3.1"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-guava:2.3.1"
+    compile 'com.beust:jcommander:1.35-patched'
+    compile 'tw.edu.ntu.csie:libsvm:3.17'
+    compile 'nz.ac.waikato.cms.weka:weka-stable:3.6.6'
+
+    compile 'com.mangosdk:spi:0.2.4'
+
+    // Test dependencies.
+    testCompile 'junit:junit:4.11'
+}
+
+// Creates scripts for entry points
+// Subproject must apply application plugin to be able to call this method.
+def createScript(project, mainClass, name, jvmArgs) {
+    project.tasks.create(name: name, type: CreateStartScripts) {
+        outputDir = new File(project.buildDir, 'scripts')
+        mainClassName = mainClass
+        applicationName = name
+        classpath = project.tasks[JavaPlugin.JAR_TASK_NAME].outputs.files +      project.configurations.runtime
+        
+        
+        println "$jvmArgs"
+        def applicationDefaultJvmArgs = jvmArgs
+    project.tasks[name].dependsOn(project.jar)
+    project.applicationDistribution.with {
+        into("bin") {
+            from(project.tasks[name])
+            fileMode = 0755
+        }
+    }
+}
+}
+
+
+
+// Running Hydra (reduced RAM)             
+createScript(project,
+             'ca.ubc.cs.beta.hydra.executors.HydraExecutor',
+             'hydra-test',
+             ['-Xmx1024m', '-Dsun.zip.disableMemoryMapping'])
+
+// Executing Portfolio           
+createScript(project,
+             'ca.ubc.cs.beta.hydra.executors.PortfolioExecutor',
+             'portfolio-evaluator',
+             ['-Xmx2048m', '-Dsun.zip.disableMemoryMapping'])
+
+// Run MySQLDBTAE            
+createScript(project,
+             'ca.ubc.cs.beta.mysqldbtae.worker.MySQLTAEWorker',
+             'mysql-worker',
+             ['-Xmx2048m', '-Dsun.zip.disableMemoryMapping'])
+             
+// Run SMAC (ca.ubc.cs.beta:smac:smac-v2.10.00-development.)          
+createScript(project,
+             'ca.ubc.cs.beta.smac.executors.SMACExecutor',
+             'smac',
+             ['-Xmx2048m', '-Dsun.zip.disableMemoryMapping'])
+             
+             
+//Project properties.
+applicationName = 'hydra'
+jar.baseName = applicationName
+version = "$HydraVersion-"+getGitName()
+mainClassName = 'ca.ubc.cs.beta.hydra.executors.HydraExecutor'
+applicationDefaultJvmArgs = ['-Xmx8192m', '-Dsun.zip.disableMemoryMapping']        
+             
+
+//Publishing to EARG maven repo.
+public String getEARGMavenRepo()
+{
+    Properties properties = new Properties()
+    def propertyFilename = 'local.properties'
+    def propertyFile = project.rootProject.file(propertyFilename)
+    if(!propertyFile.exists()) {
+        println 'Necessary file '+propertyFilename+' was not present, creating an empty version of it!'
+        propertyFile.createNewFile()
+    }
+    properties.load(propertyFile.newDataInputStream())
+    def eargMavenRepo = properties.getProperty('earg.mavenrepo.dir')
+    return eargMavenRepo
+}
+
+publishing {
+
+    repositories {
+        //Local EARG maven repo.   
+        maven {
+            //url getEARGMavenRepo()+'/snapshots/'
+            url '/Users/Chris/Documents/software/releases/'
+        }
+    }
+    
+    publications {
+    
+        maven(MavenPublication) {
+            groupId 'ca.ubc.cs.beta'
+            artifactId applicationName
+            version version
+            
+            from components.java
+            
+            artifact sourcesJar {
+                classifier "sources"
+            }
+            //copyToLib {
+            //    classifier "sources"
+            //}
+            artifact distZip {
+                classifier "dist"
+                //classifier "sources"
+            }
+        }
+    
+    }
+}
+
+distributions {
+    main {
+        contents {
+            from(sourcesJar) {
+                into "lib"
+            }
+        }
+    }
+}

@@ -1,0 +1,7 @@
+mysqldbtae-batch-insert-size=1000
+mysqldbtae-database=Hydra
+mysqldbtae-hostname=arrowdb.cs.ubc.ca
+mysqldbtae-password=password
+mysqldbtae-port=4545
+mysqldbtae-username=username
+mysqldbtae-wake-up-on-submit=true

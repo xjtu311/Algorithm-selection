@@ -1,0 +1,1 @@
+../../bin/hydra --num-iterations 8 --num-smac-runs 2 --num-configs-per-iter 1 --rungroup Hydra_Branin --num-run 1 --smacOptions ./scenario.txt --smac-execution-options ./smac-execution-options-local.txt --zilla-options ./zilla-options.txt --portfolio-evaluation VBS --portfolio-objective VBS --save-porfolio-performance true

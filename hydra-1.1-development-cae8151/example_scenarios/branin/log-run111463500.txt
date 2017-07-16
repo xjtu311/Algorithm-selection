@@ -1,0 +1,20 @@
+18:35:49.647 [main] INFO  c.u.c.b.a.l.ComplexLoggingOptions - Logging to: /Users/Chris/Documents/workspace/hydra/src/dist/example_scenarios/branin/log-run111463500.txt
+18:35:49.664 [main] INFO  c.u.c.b.a.m.version.VersionTracker - Version of Algorithm Execution & Abstraction Toolkit is v2.10.00-development-9 (24a421f3b6ad) 
+18:35:49.664 [main] INFO  c.u.c.b.a.m.version.VersionTracker - Version of Java Runtime Environment is Java HotSpot(TM) 64-Bit Server VM (1.7.0_55) 
+18:35:49.664 [main] INFO  c.u.c.b.a.m.version.VersionTracker - Version of MySQL Database Target Algorithm Evaluator is v0.92.00b-development-4 (e19033ddbed8) 
+18:35:49.664 [main] INFO  c.u.c.b.a.m.version.VersionTracker - Version of OS is Mac OS X 10.8.5 (x86_64) 
+18:35:49.664 [main] INFO  c.u.c.b.a.m.version.VersionTracker - Version of Random Forest Library is v1.10.01-development-3 (415191bb90cf) 
+18:35:49.664 [main] INFO  c.u.c.b.a.m.version.VersionTracker - Version of SMAC is v2.10.02-development-8 (5c2edb3dd8f6) 
+18:35:49.664 [main] INFO  c.u.c.b.a.m.version.VersionTracker - Version of zilla is ERROR LOADING VERSION INFORMATION 
+18:35:49.664 [main] INFO  c.u.c.b.h.executors.HydraExecutor - Parsing (default) options from file: /Users/Chris/.aeatk/ipc-tae.opt 
+18:35:49.664 [main] INFO  c.u.c.b.h.executors.HydraExecutor - Parsing (default) options from file: /Users/Chris/.aeatk/mysqldbtae.opt 
+18:35:49.664 [main] INFO  c.u.c.b.h.executors.HydraExecutor - Parsing (default) options from file: /Users/Chris/.aeatk/cli-tae.opt 
+18:35:49.665 [main] INFO  c.u.c.b.h.executors.HydraExecutor - Logging to null.
+18:35:49.665 [main] ERROR c.u.c.b.h.executors.HydraExecutor - Message: Error while reading file: ./scenario (Option File (JCommander @ParameterFile) does not exist: scenario)
+18:35:49.665 [main] INFO  c.u.c.b.h.executors.HydraExecutor - Don't forget that some options are set by default from files in ~/.aclib/
+18:35:49.665 [main] INFO  c.u.c.b.h.executors.HydraExecutor - Exiting Hydra with failure. Log: /Users/Chris/Documents/workspace/hydra/src/dist/example_scenarios/branin/log-run111463500.txt
+18:35:49.665 [main] INFO  c.u.c.b.h.executors.HydraExecutor - For a list of available commands use:  --help
+18:35:49.665 [main] INFO  c.u.c.b.h.executors.HydraExecutor - Please see above for the available options. Further information is available in the following documents:
+18:35:49.665 [main] INFO  c.u.c.b.h.executors.HydraExecutor - - The Quickstart Guide (doc/quickstart.pdf) gives a simple example for getting up and running.
+18:35:49.666 [main] INFO  c.u.c.b.h.executors.HydraExecutor - - The Manual (doc/manual.pdf) contains detailed information on file format semantics.
+18:35:49.666 [main] INFO  c.u.c.b.h.executors.HydraExecutor - Returning with value: 255

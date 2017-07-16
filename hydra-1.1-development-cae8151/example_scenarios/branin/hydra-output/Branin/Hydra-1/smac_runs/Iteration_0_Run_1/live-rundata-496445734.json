@@ -1,0 +1,681 @@
+[ {
+  "@pi-id" : 2,
+  "pi-name" : "x1_-5.0",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : -5.0
+  },
+  "pi-instance-id(deprecated)" : 1
+}, {
+  "@pi-id" : 3,
+  "pi-name" : "x1_-4.8",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : -4.8
+  },
+  "pi-instance-id(deprecated)" : 2
+}, {
+  "@pi-id" : 4,
+  "pi-name" : "x1_-4.6",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : -4.6
+  },
+  "pi-instance-id(deprecated)" : 3
+}, {
+  "@pi-id" : 5,
+  "pi-name" : "x1_-4.4",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : -4.4
+  },
+  "pi-instance-id(deprecated)" : 4
+}, {
+  "@pi-id" : 6,
+  "pi-name" : "x1_-4.2",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : -4.2
+  },
+  "pi-instance-id(deprecated)" : 5
+}, {
+  "@pi-id" : 7,
+  "pi-name" : "x1_-4.0",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : -4.0
+  },
+  "pi-instance-id(deprecated)" : 6
+}, {
+  "@pi-id" : 8,
+  "pi-name" : "x1_-3.8",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : -3.8
+  },
+  "pi-instance-id(deprecated)" : 7
+}, {
+  "@pi-id" : 9,
+  "pi-name" : "x1_-3.6",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : -3.6
+  },
+  "pi-instance-id(deprecated)" : 8
+}, {
+  "@pi-id" : 10,
+  "pi-name" : "x1_-3.4",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : -3.4
+  },
+  "pi-instance-id(deprecated)" : 9
+}, {
+  "@pi-id" : 11,
+  "pi-name" : "x1_-3.2",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : -3.2
+  },
+  "pi-instance-id(deprecated)" : 10
+}, {
+  "@pi-id" : 12,
+  "pi-name" : "x1_-3.0",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : -3.0
+  },
+  "pi-instance-id(deprecated)" : 11
+}, {
+  "@pi-id" : 13,
+  "pi-name" : "x1_-2.8",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : -2.8
+  },
+  "pi-instance-id(deprecated)" : 12
+}, {
+  "@pi-id" : 14,
+  "pi-name" : "x1_-2.6",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : -2.6
+  },
+  "pi-instance-id(deprecated)" : 13
+}, {
+  "@pi-id" : 15,
+  "pi-name" : "x1_-2.4",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : -2.4
+  },
+  "pi-instance-id(deprecated)" : 14
+}, {
+  "@pi-id" : 16,
+  "pi-name" : "x1_-2.2",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : -2.2
+  },
+  "pi-instance-id(deprecated)" : 15
+}, {
+  "@pi-id" : 17,
+  "pi-name" : "x1_-2.0",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : -2.0
+  },
+  "pi-instance-id(deprecated)" : 16
+}, {
+  "@pi-id" : 18,
+  "pi-name" : "x1_-1.8",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : -1.8
+  },
+  "pi-instance-id(deprecated)" : 17
+}, {
+  "@pi-id" : 19,
+  "pi-name" : "x1_-1.6",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : -1.6
+  },
+  "pi-instance-id(deprecated)" : 18
+}, {
+  "@pi-id" : 20,
+  "pi-name" : "x1_-1.4",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : -1.4
+  },
+  "pi-instance-id(deprecated)" : 19
+}, {
+  "@pi-id" : 21,
+  "pi-name" : "x1_-1.2",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : -1.2
+  },
+  "pi-instance-id(deprecated)" : 20
+}, {
+  "@pi-id" : 22,
+  "pi-name" : "x1_-1.0",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : -1.0
+  },
+  "pi-instance-id(deprecated)" : 21
+}, {
+  "@pi-id" : 23,
+  "pi-name" : "x1_-0.8",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : -0.8
+  },
+  "pi-instance-id(deprecated)" : 22
+}, {
+  "@pi-id" : 24,
+  "pi-name" : "x1_-0.6",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : -0.6
+  },
+  "pi-instance-id(deprecated)" : 23
+}, {
+  "@pi-id" : 25,
+  "pi-name" : "x1_-0.4",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : -0.4
+  },
+  "pi-instance-id(deprecated)" : 24
+}, {
+  "@pi-id" : 26,
+  "pi-name" : "x1_-0.2",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : -0.2
+  },
+  "pi-instance-id(deprecated)" : 25
+}, {
+  "@pi-id" : 27,
+  "pi-name" : "x1_0.0",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 0.0
+  },
+  "pi-instance-id(deprecated)" : 26
+}, {
+  "@pi-id" : 28,
+  "pi-name" : "x1_0.2",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 0.2
+  },
+  "pi-instance-id(deprecated)" : 27
+}, {
+  "@pi-id" : 29,
+  "pi-name" : "x1_0.4",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 0.4
+  },
+  "pi-instance-id(deprecated)" : 28
+}, {
+  "@pi-id" : 30,
+  "pi-name" : "x1_0.6",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 0.6
+  },
+  "pi-instance-id(deprecated)" : 29
+}, {
+  "@pi-id" : 31,
+  "pi-name" : "x1_0.8",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 0.8
+  },
+  "pi-instance-id(deprecated)" : 30
+}, {
+  "@pi-id" : 32,
+  "pi-name" : "x1_1.0",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 1.0
+  },
+  "pi-instance-id(deprecated)" : 31
+}, {
+  "@pi-id" : 33,
+  "pi-name" : "x1_1.2",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 1.2
+  },
+  "pi-instance-id(deprecated)" : 32
+}, {
+  "@pi-id" : 34,
+  "pi-name" : "x1_1.4",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 1.4
+  },
+  "pi-instance-id(deprecated)" : 33
+}, {
+  "@pi-id" : 35,
+  "pi-name" : "x1_1.6",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 1.6
+  },
+  "pi-instance-id(deprecated)" : 34
+}, {
+  "@pi-id" : 36,
+  "pi-name" : "x1_1.8",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 1.8
+  },
+  "pi-instance-id(deprecated)" : 35
+}, {
+  "@pi-id" : 37,
+  "pi-name" : "x1_2.0",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 2.0
+  },
+  "pi-instance-id(deprecated)" : 36
+}, {
+  "@pi-id" : 38,
+  "pi-name" : "x1_2.2",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 2.2
+  },
+  "pi-instance-id(deprecated)" : 37
+}, {
+  "@pi-id" : 39,
+  "pi-name" : "x1_2.4",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 2.4
+  },
+  "pi-instance-id(deprecated)" : 38
+}, {
+  "@pi-id" : 40,
+  "pi-name" : "x1_2.6",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 2.6
+  },
+  "pi-instance-id(deprecated)" : 39
+}, {
+  "@pi-id" : 41,
+  "pi-name" : "x1_2.8",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 2.8
+  },
+  "pi-instance-id(deprecated)" : 40
+}, {
+  "@pi-id" : 42,
+  "pi-name" : "x1_3.0",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 3.0
+  },
+  "pi-instance-id(deprecated)" : 41
+}, {
+  "@pi-id" : 43,
+  "pi-name" : "x1_3.2",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 3.2
+  },
+  "pi-instance-id(deprecated)" : 42
+}, {
+  "@pi-id" : 44,
+  "pi-name" : "x1_3.4",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 3.4
+  },
+  "pi-instance-id(deprecated)" : 43
+}, {
+  "@pi-id" : 45,
+  "pi-name" : "x1_3.6",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 3.6
+  },
+  "pi-instance-id(deprecated)" : 44
+}, {
+  "@pi-id" : 46,
+  "pi-name" : "x1_3.8",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 3.8
+  },
+  "pi-instance-id(deprecated)" : 45
+}, {
+  "@pi-id" : 47,
+  "pi-name" : "x1_4.0",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 4.0
+  },
+  "pi-instance-id(deprecated)" : 46
+}, {
+  "@pi-id" : 48,
+  "pi-name" : "x1_4.2",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 4.2
+  },
+  "pi-instance-id(deprecated)" : 47
+}, {
+  "@pi-id" : 49,
+  "pi-name" : "x1_4.4",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 4.4
+  },
+  "pi-instance-id(deprecated)" : 48
+}, {
+  "@pi-id" : 50,
+  "pi-name" : "x1_4.6",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 4.6
+  },
+  "pi-instance-id(deprecated)" : 49
+}, {
+  "@pi-id" : 51,
+  "pi-name" : "x1_4.8",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 4.8
+  },
+  "pi-instance-id(deprecated)" : 50
+}, {
+  "@pi-id" : 52,
+  "pi-name" : "x1_5.0",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 5.0
+  },
+  "pi-instance-id(deprecated)" : 51
+}, {
+  "@pi-id" : 53,
+  "pi-name" : "x1_5.2",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 5.2
+  },
+  "pi-instance-id(deprecated)" : 52
+}, {
+  "@pi-id" : 54,
+  "pi-name" : "x1_5.4",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 5.4
+  },
+  "pi-instance-id(deprecated)" : 53
+}, {
+  "@pi-id" : 55,
+  "pi-name" : "x1_5.6",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 5.6
+  },
+  "pi-instance-id(deprecated)" : 54
+}, {
+  "@pi-id" : 56,
+  "pi-name" : "x1_5.8",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 5.8
+  },
+  "pi-instance-id(deprecated)" : 55
+}, {
+  "@pi-id" : 57,
+  "pi-name" : "x1_6.0",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 6.0
+  },
+  "pi-instance-id(deprecated)" : 56
+}, {
+  "@pi-id" : 58,
+  "pi-name" : "x1_6.2",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 6.2
+  },
+  "pi-instance-id(deprecated)" : 57
+}, {
+  "@pi-id" : 59,
+  "pi-name" : "x1_6.4",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 6.4
+  },
+  "pi-instance-id(deprecated)" : 58
+}, {
+  "@pi-id" : 60,
+  "pi-name" : "x1_6.6",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 6.6
+  },
+  "pi-instance-id(deprecated)" : 59
+}, {
+  "@pi-id" : 61,
+  "pi-name" : "x1_6.8",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 6.8
+  },
+  "pi-instance-id(deprecated)" : 60
+}, {
+  "@pi-id" : 62,
+  "pi-name" : "x1_7.0",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 7.0
+  },
+  "pi-instance-id(deprecated)" : 61
+}, {
+  "@pi-id" : 63,
+  "pi-name" : "x1_7.2",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 7.2
+  },
+  "pi-instance-id(deprecated)" : 62
+}, {
+  "@pi-id" : 64,
+  "pi-name" : "x1_7.4",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 7.4
+  },
+  "pi-instance-id(deprecated)" : 63
+}, {
+  "@pi-id" : 65,
+  "pi-name" : "x1_7.6",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 7.6
+  },
+  "pi-instance-id(deprecated)" : 64
+}, {
+  "@pi-id" : 66,
+  "pi-name" : "x1_7.8",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 7.8
+  },
+  "pi-instance-id(deprecated)" : 65
+}, {
+  "@pi-id" : 67,
+  "pi-name" : "x1_8.0",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 8.0
+  },
+  "pi-instance-id(deprecated)" : 66
+}, {
+  "@pi-id" : 68,
+  "pi-name" : "x1_8.2",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 8.2
+  },
+  "pi-instance-id(deprecated)" : 67
+}, {
+  "@pi-id" : 69,
+  "pi-name" : "x1_8.4",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 8.4
+  },
+  "pi-instance-id(deprecated)" : 68
+}, {
+  "@pi-id" : 70,
+  "pi-name" : "x1_8.6",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 8.6
+  },
+  "pi-instance-id(deprecated)" : 69
+}, {
+  "@pi-id" : 71,
+  "pi-name" : "x1_8.8",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 8.8
+  },
+  "pi-instance-id(deprecated)" : 70
+}, {
+  "@pi-id" : 72,
+  "pi-name" : "x1_9.0",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 9.0
+  },
+  "pi-instance-id(deprecated)" : 71
+}, {
+  "@pi-id" : 73,
+  "pi-name" : "x1_9.2",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 9.2
+  },
+  "pi-instance-id(deprecated)" : 72
+}, {
+  "@pi-id" : 74,
+  "pi-name" : "x1_9.4",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 9.4
+  },
+  "pi-instance-id(deprecated)" : 73
+}, {
+  "@pi-id" : 75,
+  "pi-name" : "x1_9.6",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 9.6
+  },
+  "pi-instance-id(deprecated)" : 74
+}, {
+  "@pi-id" : 76,
+  "pi-name" : "x1_9.8",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 9.8
+  },
+  "pi-instance-id(deprecated)" : 75
+}, {
+  "@pi-id" : 77,
+  "pi-name" : "x1_10.0",
+  "pi-instance-specific-info" : "0",
+  "pi-features" : {
+    "feature" : 10.0
+  },
+  "pi-instance-id(deprecated)" : 76
+} ] {
+  "r-rc" : {
+    "@rc-id" : 2,
+    "rc-algo-exec-config" : {
+      "@algo-exec-config-id" : 2,
+      "algo-exec" : "python ./braninWrapper.py",
+      "algo-exec-dir" : "/Users/Chris/Documents/workspace/hydra/src/dist/example_scenarios/branin/.",
+      "algo-pcs" : {
+        "@pcs-id" : 2,
+        "pcs-filename" : "/Users/Chris/Documents/workspace/hydra/src/dist/example_scenarios/branin/./pcs.txt",
+        "pcs-text" : "x2 [0,15][7.5]\n",
+        "pcs-subspace" : { }
+      },
+      "algo-cutoff" : 10.0,
+      "algo-deterministic" : true,
+      "algo-tae-context" : { }
+    },
+    "rc-cutoff" : 10.0,
+    "rc-pisp" : {
+      "@pisp-id" : 2,
+      "pisp-pi" : {
+        "@pi-id" : 12
+      },
+      "pisp-seed" : -1
+    },
+    "rc-pc" : {
+      "@pc-id" : 2,
+      "pc-pcs" : {
+        "@pcs-id" : 2
+      },
+      "pc-settings" : {
+        "x2" : "7.5"
+      },
+      "pc-active-parameters" : [ "x2" ],
+      "pc-forbidden" : false,
+      "pc-default" : true
+    },
+    "rc-sample-idx" : 0
+  },
+  "r-run-result" : "SAT",
+  "r-runtime" : 0.001,
+  "r-run-length" : 1.0,
+  "r-quality" : 20.1837,
+  "r-result-seed" : -1,
+  "r-addl-run-data" : "",
+  "r-wallclock-time" : 0.039
+} {
+  "r-rc" : {
+    "@rc-id" : 3,
+    "rc-algo-exec-config" : {
+      "@algo-exec-config-id" : 2
+    },
+    "rc-cutoff" : 10.0,
+    "rc-pisp" : {
+      "@pisp-id" : 3,
+      "pisp-pi" : {
+        "@pi-id" : 2
+      },
+      "pisp-seed" : -1
+    },
+    "rc-pc" : {
+      "@pc-id" : 2
+    },
+    "rc-sample-idx" : 0
+  },
+  "r-run-result" : "SAT",
+  "r-runtime" : 0.001,
+  "r-run-length" : 1.0,
+  "r-quality" : 106.5687,
+  "r-result-seed" : -1,
+  "r-addl-run-data" : "",
+  "r-wallclock-time" : 0.03
+}

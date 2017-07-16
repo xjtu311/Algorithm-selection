@@ -1,0 +1,42 @@
+#!/bin/bash
+#PBS -S bin/bash
+
+# some arguments don't have a corresponding value to go with it such
+# as in the --default example).
+while [[ $# > 0 ]]
+do
+key="$1"
+
+case $key in
+    -w|--wall-time)
+    WALLTIME="$2"
+    shift # past argument
+    ;;
+    -n|--num-workers)
+    NUMWORKERS="$2"
+    shift # past argument
+    ;;
+    -p|--pool)
+    POOL="$2"
+    shift # past argument
+    ;;
+    -d|--log-output-dir)
+    LOGOUTPUTDIR="$2"
+    --default)
+    DEFAULT=YES
+    ;;
+    *)
+            # unknown option
+    ;;
+esac
+shift # past argument or value
+done
+
+# Get parent directory of file
+parentDir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+
+for index in $(seq 1 $NUMWORKERS)
+do
+    echo "Worker $index has been dispatched with walltime $WALLTIME with pool $POOL"
+    qsub -v POOL=$POOL,PARENTDIR=$parentDir,LOGOUTPUTDIR=$LOGOUTPUTDIR -l walltime=$WALLTIME,mem=8gb,nodes=1:ppn=1 -N HydraWorker_$POOL_$index -o ./worker_$POOL_$index.out -e ./worker_$POOL_$index.err $parentDir/launchworker_aclib
+done

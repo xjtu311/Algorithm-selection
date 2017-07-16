@@ -1,0 +1,15 @@
+algo = python ./braninWrapper.py
+execdir = .
+deterministic = 1
+run_obj = quality
+#overall_obj = mean10
+cutoff_time = 10
+#max-evaluations = 1000
+numberOfRunsLimit = 1000
+wallclock-limit = 1720
+paramfile = ./pcs.txt
+instance_file = ./training.txt
+test_instance_file = ./test.txt
+feature_file = ./features.txt
+#cli-log-all-process-output = true
+#overwrite-instance-specific-info-with-unique-SMAC-identifier = true

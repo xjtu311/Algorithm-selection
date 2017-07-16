@@ -1,0 +1,1 @@
+../../bin/hydra --num-iterations 8 --num-smac-runs 4 --num-configs-per-iter 2 --rungroup Hydra_Simple --num-run 1 --smacOptions ./scenario.txt --smac-execution-options ./smac-execution-options-local.txt --zilla-options ./zilla-options.txt --portfolio-evaluation ZILLA

@@ -1,0 +1,27 @@
+00:34:03.183 [SMACTAE Abstract Blocking TAE Async Processing Thread (Available Processors 4) (9-1)] ERROR c.u.c.b.h.builders.SMACHydraWrapper - Message: ca.ubc.cs.beta.models.fastrf.RandomForest.classify(Lca/ubc/cs/beta/models/fastrf/RandomForest;[D[D)D
+00:34:03.183 [SMACTAE Abstract Blocking TAE Async Processing Thread (Available Processors 4) (9-1)] ERROR c.u.c.b.h.builders.SMACHydraWrapper - Exception:java.lang.NoSuchMethodError
+00:34:03.184 [SMACTAE Abstract Blocking TAE Async Processing Thread (Available Processors 4) (9-1)] ERROR c.u.c.b.h.builders.SMACHydraWrapper - StackTrace:java.lang.NoSuchMethodError: ca.ubc.cs.beta.models.fastrf.RandomForest.classify(Lca/ubc/cs/beta/models/fastrf/RandomForest;[D[D)D
+	at ca.ubc.cs.beta.smac.configurator.AbstractAlgorithmFramework.perInstanceChallengerPerformance(AbstractAlgorithmFramework.java:1162)
+	at ca.ubc.cs.beta.smac.configurator.AbstractAlgorithmFramework.challengeIncumbent(AbstractAlgorithmFramework.java:955)
+	at ca.ubc.cs.beta.smac.configurator.AbstractAlgorithmFramework.challengeIncumbent(AbstractAlgorithmFramework.java:852)
+	at ca.ubc.cs.beta.smac.configurator.AbstractAlgorithmFramework.intensify(AbstractAlgorithmFramework.java:840)
+	at ca.ubc.cs.beta.smac.configurator.AbstractAlgorithmFramework.run(AbstractAlgorithmFramework.java:588)
+	at ca.ubc.cs.beta.hydra.builders.SMACHydraWrapper.<init>(SMACHydraWrapper.java:207)
+	at ca.ubc.cs.beta.hydra.builders.SMACTAE.evaluateRun(SMACTAE.java:63)
+	at ca.ubc.cs.beta.aeatk.targetalgorithmevaluator.AbstractSyncTargetAlgorithmEvaluator$1.run(AbstractSyncTargetAlgorithmEvaluator.java:120)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+
+00:34:03.186 [main] ERROR c.u.c.b.h.executors.HydraExecutor - Message: java.lang.RuntimeException: Error executing SMAC wrapper: java.lang.NullPointerException
+00:34:03.187 [main] ERROR c.u.c.b.h.executors.HydraExecutor - Exception:java.lang.RuntimeException
+00:34:03.187 [main] ERROR c.u.c.b.h.executors.HydraExecutor - StackTrace:java.lang.RuntimeException: java.lang.RuntimeException: Error executing SMAC wrapper: java.lang.NullPointerException
+	at ca.ubc.cs.beta.hydra.executors.HydraExecutor.hydraExecutor(HydraExecutor.java:579)
+	at ca.ubc.cs.beta.hydra.executors.HydraExecutor.main(HydraExecutor.java:152)
+Caused by: java.lang.RuntimeException: Error executing SMAC wrapper: java.lang.NullPointerException
+	at ca.ubc.cs.beta.hydra.builders.SMACTAE.evaluateRun(SMACTAE.java:66)
+	at ca.ubc.cs.beta.aeatk.targetalgorithmevaluator.AbstractSyncTargetAlgorithmEvaluator$1.run(AbstractSyncTargetAlgorithmEvaluator.java:120)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+

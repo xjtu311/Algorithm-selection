@@ -1,0 +1,12 @@
+algo=./wrapper.py
+rungroup=hydra_testing
+run_obj=QUALITY
+#overall_obj=MEAN
+feature-file=./features_small.csv
+paramfile=./file.pcs
+instance_file=./inst.txt
+test-instances=./inst.txt
+adaptive-capping=false
+algo-cutoff-time=5
+wallclock-limit=10
+deterministic=false

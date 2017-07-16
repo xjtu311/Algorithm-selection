@@ -1,0 +1,12 @@
+algo = ruby ./saps_wrapper.rb
+execdir = ./
+deterministic = 0
+run_obj = runtime
+overall_obj = mean
+feature-file = ./features.csv
+algo-cutoff-time=20
+wallclock-limit=50
+rungroup=hydra_testing
+paramfile = ./saps-params.pcs
+instance_file = ./instances-train.txt
+test_instance_file = ./instances-test.txt

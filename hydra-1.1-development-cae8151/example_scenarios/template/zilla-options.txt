@@ -1,0 +1,4 @@
+solver-subset-selector-choice=NONE
+cheap-feature-manager="/Users/Chris/Documents/workspace/hydra/build/install/hydra/example_scenarios/template/cheap-feature-manager.txt"
+aem-choice=LOOKUP
+num-presolvers=2

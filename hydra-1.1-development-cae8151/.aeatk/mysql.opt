@@ -1,0 +1,5 @@
+mysqlDatabase=Hydra
+mysqlHostName=arrowdb.cs.ubc.ca
+mysqlPassword=passsword
+mysqlPort=4545
+mysqlUsername=username

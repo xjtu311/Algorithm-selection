@@ -1,0 +1,9 @@
+16:18:27.497 [main] ERROR c.u.c.b.h.executors.HydraExecutor - Message: No Target Algorithm Evalutor found for name: SMAC
+16:18:27.498 [main] ERROR c.u.c.b.h.executors.HydraExecutor - Exception:java.lang.IllegalArgumentException
+16:18:27.499 [main] ERROR c.u.c.b.h.executors.HydraExecutor - StackTrace:java.lang.IllegalArgumentException: No Target Algorithm Evalutor found for name: SMAC
+	at ca.ubc.cs.beta.aeatk.targetalgorithmevaluator.init.TargetAlgorithmEvaluatorLoader.getTargetAlgorithmEvaluator(TargetAlgorithmEvaluatorLoader.java:117)
+	at ca.ubc.cs.beta.aeatk.targetalgorithmevaluator.init.TargetAlgorithmEvaluatorBuilder.getTargetAlgorithmEvaluator(TargetAlgorithmEvaluatorBuilder.java:128)
+	at ca.ubc.cs.beta.aeatk.targetalgorithmevaluator.TargetAlgorithmEvaluatorOptions.getTargetAlgorithmEvaluator(TargetAlgorithmEvaluatorOptions.java:273)
+	at ca.ubc.cs.beta.hydra.executors.HydraExecutor.hydraExecutor(HydraExecutor.java:206)
+	at ca.ubc.cs.beta.hydra.executors.HydraExecutor.main(HydraExecutor.java:152)
+

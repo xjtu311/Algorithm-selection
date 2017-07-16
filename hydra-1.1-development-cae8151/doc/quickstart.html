@@ -1,0 +1,502 @@
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Hydra: Algorithm Configuration for Portfolio-based selection</title>
+  <style type="text/css">
+body {
+color: black;
+background-color: white;
+font-family: Helvetica, Verdana, Arial;
+font-size: small;
+link="#0000cc"
+vlink="9999ff"
+}
+table {
+font-size: small;
+}
+table.with_borders {
+border: 1px solid black;
+border-collapse: collapse;
+}
+table.with_borders tbody tr:first-child {
+border-top: 1px solid black;
+}
+span.note {
+color: grey;
+}
+ul li {
+padding: 5px;
+}
+.without_bullet {
+list-style: none;
+}
+.not_finished {
+display: none;
+}
+#old_software ul li {
+padding: 5px;
+}
+#old_software {
+width: 800px;
+} #applications>table {
+width: 1000px;
+}
+h3 {
+color: #000066;
+}
+code {
+   font-size: medium;
+}
+
+  </style>
+</head>
+<body link="#0000cc" vlink="#9999ff">
+<table border="0" width="100%">
+  <tbody>
+    <tr>
+      <td valign="top">
+      <h1 align="center"><b>Hydra:&nbsp;Algorithm Configuration for Portfolio-based selection
+</b></h1>
+      <p><a href="http://www.cs.ubc.ca/labs/beta/">Bioinformatics,
+and
+Empirical &amp; Theoretical Algorithmics Laboratory
+(&szlig;-Lab)</a><br>
+      <a href="http://www.cs.ubc.ca">Department
+of Computer Science</a><br>
+      <a href="http://www.ubc.ca">The
+University of British Columbia</a></p>
+      </td>
+      <td>&nbsp;</td>
+    </tr>
+  </tbody>
+</table>
+<div width="100%"
+ style="margin: 5px; padding: 10px 25pt; background-color: rgb(65, 105, 225); color: rgb(255, 255, 255);">
+<!-- 
+<font size="2"> <b><a href="#news"><span
+ style="color: rgb(255, 255, 255);">News</span></a>
+&nbsp; <a href="#abstract"><span
+ style="color: rgb(255, 255, 255); padding-left: 20pt;">Abstract</span></a></b>&nbsp;
+&nbsp; <b> <a href="#people"><span
+ style="color: rgb(255, 255, 255); padding-left: 20pt;">People</span></a></b>&nbsp;
+&nbsp; <b><a href="#papers"><span
+ style="color: rgb(255, 255, 255); padding-left: 20pt;">Papers</span></a></b> &nbsp;
+&nbsp; <b><a href="#license"><span
+ style="color: rgb(255, 255, 255); padding-left: 20pt;">License</span></a></b>&nbsp;
+ &nbsp; <b><a href="#forum"><span
+ style="color: rgb(255, 255, 255); padding-left: 20pt;">Forum</span></a></b> &nbsp;
+&nbsp; <b><a href="#software"><span
+ style="color: rgb(255, 255, 255); padding-left: 20pt;">Software</span></a></b> 
+&nbsp; <b><a href="#quickstart"><span
+ style="color: rgb(255, 255, 255); padding-left: 20pt;">Quickstart Guide</span></a></b> 
+ </font>
+-->
+</div>
+<h3><a name="news"></a><font size="+2">Quickstart Guide to Hydra</font></h3>
+<p>
+
+(Adapted from the SMAC <a href="http://www.cs.ubc.ca/labs/beta/Projects/SMAC/v2.08.00/quickstart.html">quickstart </a> guide) <br>
+
+Hydra tries to finds a portfolio of parameter settings that minimizes performance of portfolio-based algorithm selection. Hydra greedily adds new parameter settings to the portfolio that minimize the performance of the portfolio. In every iteration of Hydra, SMAC is used to look for a parameter setting that minimizes some performance metric when added to your portfolio (such as runtime, error, or cost).
+
+<h3><a name="news"></a><font size="+1">Contents</font></h3> 
+<a href="#smac"> SMAC </a>
+<ul>
+<li>
+<a href="#instances"> Instances </a>
+</li>
+<li>
+<a href="#parameters"> Parameters </a>
+</li>
+<li>
+<a href="#wrapper"> Wrapper </a>
+</li>
+</ul>
+<a href="#hydra"> Running Hydra with SMAC </a>
+<ul>
+<li>
+<a href="#basic"> Basic </a>
+</li>
+<li>
+<a href="#distributed"> Distributed </a>
+</li>
+</ul>
+
+<h3><a name="smac"></a><font size="+1">Setting up SMAC scenario</font></h3>
+
+
+To use <a href="http://www.cs.ubc.ca/labs/beta/Projects/SMAC"> SMAC</a>
+for this purpose you need to tell it about your algorithm's parameters and how to evaluate your algorithm's performance. Here, we'll show how to do this. First make sure you have the Hydra project and execute:
+
+<pre>
+<code>
+unzip Hydra-1.0-development-{commit}-dist.zip
+cd Hydra-1.0-development-{commit}-dist
+</code>
+</pre>
+<code>{commit}</code> will be a sequence of numbers representing the latest commit. <br><br>
+
+
+
+Here, we'll walk through a basic example with the <a href = "https://cs.uwaterloo.ca/~dtompkin/papers/satcomp05-saps.pdf">saps</a> solver.
+
+To run the example saps SMAC scenario, execute the following command from the root folder:
+
+<pre>
+<code>
+cd example_scenarios/saps
+../../bin/smac --scenario saps-scenario.txt
+</code>
+</pre>
+
+Inside the saps-scenario.txt file, are the following options:
+
+<pre>
+  <code>
+algo = ruby ./saps_wrapper.rb
+execdir = ./
+deterministic = 0
+run_obj = runtime
+overall_obj = mean
+algo-cutoff-time=20
+wallclock-limit=50
+rungroup=hydra_testing
+paramfile = ./saps-params.pcs
+instance_file = ./instances-train.txt
+test_instance_file = ./instances-test.txt
+  </code>
+</pre>
+
+<code> algo </code> specifies script that takes an instance and configuration and evaluates the algorihtm. See <a href = "#wrapper">Wrapper</a> section for details. <br>
+<code> paramfile </code> specifies saps parameter configuration space file. Detailed information about how to specify parameters of the various types (continuous, integer, categorical, conditional, etc) can be found in Section 4.4 of the <a href = "http://www.cs.ubc.ca/labs/beta/Projects/SMAC/v2.08.00/manual.pdf">SMAC manual</a> <br>
+<code> deterministic </code> specifies that the target algorithm is nondeterministic; SMAC will then execute promising configurations multiple times, using different seeds for a pseudo-random number generator. <br>
+<code> run_obj, overall_obj, algo-cutoff-time </code> specify that we're aiming to minimize mean runtime, with a maximal per-run cutoff of 20 second (this is a toy example) <br>
+<code> wallclock-limit </code> sets a wall clock timeout of 50 seconds for SMAC; in practice, we often set this to 172800 seconds (2 days). <br>
+<code> instance_file, test_instance_file </code> specifies a training and testing set of SAT instances resepectively
+
+<h3><a name="instances"></a><font size="+0">Instances</font></h3>
+Below is the <code>./instances-train.txt</code> file.
+<pre>
+<code>
+./instances/train/SWlin2006.10286.cnf
+./instances/train/SWlin2006.19724.cnf
+./instances/train/SWlin2006.2705.cnf
+./instances/train/SWlin2006.4072.cnf
+./instances/train/SWlin2006.8287.cnf
+</code>
+</pre>
+Each line in this file contains a string specifying an instance and in each algorithm run SMAC performs, it will pass one of these strings to the wrapper. Note that an instance here does not have to be an actual file. For example, in cross-validation, the instance file could simply list the number i on line i, and the wrapper could use that information to only evaluate cross-validation fold i in a single algorithm run. 
+
+Note that we only included 5 instances in this example set to keep the download size small, but normally we would choose it much larger in order to avoid over-tuning to this particular set. 
+
+Below is the <code>./instances-train.txt</code> file specifying a disjoint test set of instances for offline validation after SMAC finishes:
+<pre>
+<code>
+./instances/test/SWlin2006.11218.cnf
+./instances/test/SWlin2006.12713.cnf
+./instances/test/SWlin2006.18830.cnf
+./instances/test/SWlin2006.4166.cnf
+./instances/test/SWlin2006.4435.cnf
+</code>
+</pre>
+
+<!--
+As mentioned above, the strings representing instances do not have to be actual files. However, if they are, we can specify them more easily by simply naming a folder containing them. In the example above, this can be achieved by replacing 
+<pre>
+<code>
+instance_file = example_scenarios/spear/instances-train.txt
+test_instance_file = example_scenarios/spear/instances-test.txt
+</code>
+</pre>
+by
+<pre>
+<code>
+instances = example_scenarios/spear/instances/train
+test_instances = example_scenarios/spear/instances/test
+instance-suffix = cnf
+</code>
+</pre>
+SMAC will then use all files in the training and test folders and their recursive subfolders with the suffix cnf. 
+-->
+
+<h3><a name="parameters"></a><font size="+0">Parameters</font></h3>
+
+SMAC natively handles a range of parameter types including categorical parameters (such as choices between different heuristics), continuous parameters (such as scaling factors), integer parameters (such as step sizes), and conditional parameters (parameters that are only relevant depending on the values of other "parent" parameters).
+
+The parameter --param-file specifies the .pcs (*p*arameter *c*onfiguration *s*pace) file, which lists the algorithm's parameters, their domains, and default values (one per line). Here have a few examples of parameters. Here, we have four continuous parameters, specified using the format &lt;parameter_name real [lower bound, upper bound] [default]&gt;:
+
+<pre>
+  <code>
+alpha real [1, 1.4] [1.189] log
+rho real [0, 1] [0.5]
+ps real [0, 0.2] [0.1]
+wp real [0, 0.06] [0.03]
+  </code>
+</pre>
+
+
+<h3><a name="wrapper"></a><font size="+0">Wrapper</font></h3>
+
+The final piece in this configuration scenario is the wrapper around Saps.
+
+<code>algo = ruby ./saps_wrapper.rb</code> specifies the *wrapper* that SMAC executes with a prespecified syntax in order to evaluate the algorithm to be optimized. <br>
+This wrapper script takes an instantiation of the parameters as input, runs the algorithm with these parameters, and returns how well it did; since every algorithm has a different input and output format, this wrapper acts as a mediator between the algorithm and SMAC.
+
+SMAC executes the wrapper through a command line call. For example, to evaluate saps at (1.189,0.1,0.5,0.03), SMAC would make the equivalent of the following call:  
+<pre>
+<code>
+ruby ./saps_wrapper.rb ./instances/train/SWlin2006.19724.cnf 0 20.0 2147483647 397015 -alpha '1.189' -ps '0.1' -rho '0.5' -wp '0.03'
+</code>
+</pre>
+which yields the following result:
+<pre>
+<code>
+Result for SMAC: SUCCESS, 0.03, 36354, 0, 397015
+</code>
+</pre>
+
+When you run the above example, SMAC aims to find parameter settings (x1,x2,x3,x4) that minimize 
+the runtime of the saps solver, starting from the default values specified in the pcs file.
+Whenever it finds a new better solution, it will output it, along with a sample call string 
+to the command line wrapper that can be executed on the command line.
+
+<pre>
+<code>
+[INFO ] Sample call for new incumbent config 1 (internal ID: 0x000D):
+cd ./saps/.; ruby ./saps_wrapper.rb ./instances/train/SWlin2006.19724.cnf 0 20.0 2147483647 397015 -alpha '1.189' -ps '0.1' -rho '0.5' -wp '0.03'
+</code>
+</pre>
+
+As requested, SMAC will terminate after 50 seconds and output the final best solution it found.
+<pre>
+<code>
+SMAC has finished. Reason: wall-clock time limit (52.349 s) has been reached.
+Total number of runs performed: 9, total configurations tried: 4.
+Total CPU time used: 34 s, total wallclock time used: 52 s.
+SMAC's final incumbent: config 3 (internal ID: 0x7555), with estimated mean runtime: 3.0900000000000003, based on 4 run(s) on 4 training instance(s).
+Sample call for this final incumbent:
+cd /Users/Chris/Documents/Summer-2014/Hydra/build/install/Hydra/example_scenarios/saps/.; ruby ./saps_wrapper.rb ./instances/train/SWlin2006.2705.cnf 0 20.0 2147483647 6540762 -alpha '1.2031003770758288' -ps '0.13798053069675698' -rho '0.6859183221146163' -wp '0.04875576413277028'
+</code>
+</pre>
+
+
+<!--
+More details using SMAC's full gammit of features:
+
+- Handling structured parameter spaces:
+SMAC natively handles a range of parameter types. The following example contains categorical parameters (such as choices between different heuristics), continuous parameters (such as scaling factors), integer parameters (such as step sizes), and conditional parameters (parameters that are only relevant depending on the values of other "parent" parameters).
+
+- Special features for minimization of runtime:
+When SMAC's objective is to minimize an algorithm's runtime, every algorithm call contains a cutoff limit (also called "captime") after which to terminate the latest. SMAC adaptive chooses this captime based on a maximal cutoff limit specified by the user.
+
+- Optimization of noisy objectives, and of performance across several instances:
+Strong performance in a single algorithm run with a given parameter setting does not usually imply good performance in another run with that setting, particularly not on a new problem instance. For example, it is not enough if an algorithm for the travelling salesman problem can find an effective roundtrip on a single set of cities; likewise, it is not enough for a machine learning algorithm to do well in a single cross-validation fold.
+
+Rather, in order to avoid *over-tuning*, we usually optimize on a representative set of training instances that will make it likely for the found parameter setting to *generalize* to previously unseen, yet similar, problem instances. SMAC could, of course, simply evaluate the performance of a parameter setting on all instances in the training set, but this would be needlessly expensive. Instead, it runs the algorithm on one training instance at a time and only evaluates the best-performing configurations on the entire set, saving time by discarding poor configurations early (it is not necessary to know exactly how poor a poor configuration is; we only care about the exact performance of the best ones). 
+-->
+
+Now, we give full details for the wrapper inputs and outputs. SMAC calls wrappers through a command line call as follows (for more information see Section 5.1.1 of the  <a href = "http://www.cs.ubc.ca/labs/beta/Projects/SMAC/v2.08.00/manual.pdf">manual</a>):  
+<pre>
+<code>
+&lt;algo&gt; &lt;instance&gt; &lt;instance_specifics&gt; &lt;runtime cutoff&gt; &lt;runlength&gt; &lt;seed&gt; &lt;solver parameters&gt;
+</code>
+</pre>
+where
+<ul>
+<li> &lt;algo&gt; is the string specified in the scenario file </li>
+<li> &lt;instance&gt; is the problem instance </li>
+<li> &lt;instance_specifics&gt; can provide extra instance information (rarely used) </li>
+
+ <li> &lt;runtime cutoff&gt; is the maximal runtime </li>
+ <li> &lt;runlength&gt; is a maximal runlength, e.g., number of steps (rarely used) </li>
+ <li> &lt;seed&gt; is the random seed </li>
+ <li> &lt;solver parameters&gt; is a string specifying parameters as " -&lt;param_name&gt; &lt;param_value&gt;"  </li>
+</ul> 
+Thus, SMAC would, for example, call our saps wrapper like this:
+<pre>
+<code>
+ruby ./saps_wrapper.rb ./instances/train/SWlin2006.19724.cnf 0 20.0 2147483647 397015 -alpha '1.189' -ps '0.1' -rho '0.5' -wp '0.03'
+</code>
+</pre>
+which yields the following result:
+<pre>
+<code>
+Result for SMAC: SUCCESS, 0.03, 36354, 0, 397015
+</code>
+</pre>
+
+More generally, SMAC expects wrapper output in the following format (for more details see Section 5.1.2 of the  <a href = "http://www.cs.ubc.ca/labs/beta/Projects/SMAC/v2.08.00/manual.pdf">manual</a>):
+<pre>
+<code>
+Result for SMAC: &lt;status&gt;, &lt;runtime&gt;, &lt;runlength&gt;, &lt;quality&gt;, &lt;seed&gt;
+</code>
+</pre>
+where 
+<ul>
+<li> &lt;status&gt; is a string in {SUCCESS,TIMEOUT,CRASHED}. SUCCESS means the algorithm worked as expected. TIMEOUT means it was unsuccessful in the allotted time. CRASHED signal a problem with this run (which should be debugged afterwards); some problems (segfaults etc) may only occur with certain parameter settings. </li>
+ <li> &lt;runtime&gt; is the runtime the algorithm's required </li>
+ <li> &lt;runlength&gt; is the algorithm's runlength (if applicable, otherwise just use 0) </li>
+ <li> &lt;quality&gt; is the algorithm's quality (the minimization objective unless runObj is set to RUNTIME) </li>
+ <li> &lt;seed&gt; is the algorithm's seed (you can also just return 0) </li>
+</ul>
+
+To help you write a robust wrapper quickly, we provide a <a href= "http://aclib.net/smac/tutorial/genericwrapper/">generic wrapper that you can easily adapt to wrap your own algorithm</a>.
+
+<h3><a name="hydra"></a><font size="+1">Running Hydra with SMAC scenario</font></h3>
+
+If you have reached this step and understand how to create a SMAC scenario, we recommend you create your own wrapper, .pcs file, and parameters for your application and test with SMAC before moving on to using Hydra. Once you have been able to get SMAC running, it should be very simple to move on to using Hydra. You can test your SMAC scenario from the root folder by:
+<pre>
+<code>
+./bin/smac --scenario &lt;path-to-your-scenario-file&gt;
+</code>
+</pre>
+
+Below, we walk through a hydra execution using the above SMAC saps scenario. 
+
+<h3><a name="basic"></a><font size="+0">Basic execution</font></h3>
+
+To get started, this section will walk the user through the execution of a very simple example. To execute the example locally, execute the following from the root of the folder:
+<pre>
+<code>
+> cd example_scenarios/saps
+> ./run_saps-local.sh
+</code>
+</pre>
+Inside the <code> ./run_saps-local.sh </code>:
+<pre>
+<code>
+./../bin/hydra --num-iterations 4 --num-smac-runs 2 --num-configs-per-iter 1 --rungroup Hydra_Saps --num-run 1 --smacOptions ./saps-scenario.txt --smac-execution-options ./smac-execution-options-local.txt
+</code>
+</pre>
+This call string corresponds to a Hydra run with 4 iterations of SMAC (smac scenario file is <code> ./saps-scenario.txt </code>). In each iteration, 2 SMAC executions (<code>--num-smac-runs</code>) will be run and 1 incumbent (<code>--num-configs-per-iter</code>) will added to the portfolio. The <code>--smac-execution-options</code> must be set to a file containing options on how to run smac runs. To run locally, all the file needs to contain is:
+<pre>
+<code>
+tae=SMAC
+</code>
+</pre>
+See the <a href ="#distributed"> distributed execution section </a> for instructions on how to distribute your SMAC executions.<br><br>
+
+
+Here we describe the output. After the java call string, you will see the following printed to stdout:
+<pre>
+<code>
+[INFO ] Running Hydra for 4 iterations
+[INFO ] **************Hydra iteration: 0***************
+[INFO ] Generating SMAC runs
+[INFO ] Executing 2 SMAC runs
+</code>
+</pre>
+Next, 2 algorithm configurator (SMAC) runs will be run sequentially, which find a best configuration to be added to portfolio. For each SMAC run, you will see logging to stdout similar to:
+<pre>
+<code>
+SMAC started at: 18-Jun-2015 10:16:24 PM. Minimizing mean runtime.
+[INFO ] First incumbent: config 1 (internal ID: 0xA31E1), with mean runtime: 0.03; estimate based on 1 runs.
+[INFO ] Sample call for new incumbent config 1 (internal ID: 0xA31E1):
+......
+......
+......
+[INFO ] SMAC Execution Completed because: wall-clock time limit (53.79 s)
+ has been reached.
+
+</code>
+</pre>
+After the SMAC executions complete, the best 1 out of 2 configurations will be added to the portfolio based on the training performance. The user can choose how many configuration to run and how many to add to their portfolio with command-line parameters.
+<pre>
+<code>
+[INFO ] SMAC runs complete. Processing run results...
+[INFO ] Finding best 1 incumbents out 2 SMAC runs
+[INFO ] Incumbents sorted by training performance on runs executed by SMAC...
+[INFO ] Performance: 0.06941176470588237, Configuration: -alpha '1.3570229625905657' -ps '0.08955468111361481' -rho '0.4549265007328307' -wp '0.00844758766969784'
+[INFO ] Performance: 3.311111111111112, Configuration: -alpha '1.189' -ps '0.1' -rho '0.5' -wp '0.03'
+[INFO ] Found best incumbents.
+[INFO ] Setting Best Single configuration. Only occurs in first Hydra iteration
+[INFO ] Best single configuration: -alpha '1.3570229625905657' -ps '0.08955468111361481' -rho '0.4549265007328307' -wp '0.00844758766969784'
+[INFO ] Adding new incumbent configurations...
+[INFO ] Adding configuration: -alpha '1.3570229625905657' -ps '0.08955468111361481' -rho '0.4549265007328307' -wp '0.00844758766969784'
+</code>
+</pre>
+
+Then test performance will then be calculated based on a set of provided test instances. The user has the option to use VBS or <a href="http://www.cs.ubc.ca/labs/beta/Projects/SATzilla/">zilla</a> to test portfolio performance. The test performance of the portfolio will be printed once the test instances have been solved.
+
+<pre>
+<code>
+[INFO ] Getting portfolio performance
+[INFO ] Test performance of hydra after iteration 0: 0.148
+</code>
+</pre>
+
+After the new configurations are added to the portfolio, the next iteration will begin in the same fashion with algorithm performance representing the VBS of all the configuration contained in the portfolio.
+<pre>
+<code>
+[INFO ] **************Hydra iteration: 1***************
+......
+......
+......
+</code>
+</pre>
+
+After 4 iterations, the hydra terminated and prints out the final portfolio and test performance:
+<pre>
+<code>
+[INFO ] Writing current portfolio to: /Users/Chris/Documents/software/releases/ca/ubc/cs/beta/Hydra/1.0-development-5013393/Hydra-1.0-development-5013393-dist/example_scenarios/saps/hydra-output/Hydra_Saps/Hydra-1/Portfolios/portfolio-3.txt
+[INFO ] Best single configuration: -alpha '1.3570229625905657' -ps '0.08955468111361481' -rho '0.4549265007328307' -wp '0.00844758766969784'
+[INFO ] Final portfolio configurations
+[INFO ] 1. Portfolio Configuration :  -alpha '1.3570229625905657'
+ -ps '0.08955468111361481' -rho '0.4549265007328307' -wp '0.00844758766969784'
+[INFO ] 2. Portfolio Configuration :  -alpha '1.1223601730778767'
+ -ps '0.07888475911986773' -rho '0.8047314559241363' -wp '0.00628190839060591'
+[INFO ] 3. Portfolio Configuration :  -alpha '1.3778947812738795'
+ -ps '0.14691893797877198' -rho '0.29807307383168247' -wp '0.03949665635243472'
+[INFO ] 4. Portfolio Configuration :  -alpha '1.260589798073366'
+ -ps '0.03020086893063898' -rho '0.23304825431044507' -wp '0.0010791984714169822'
+[INFO ] Hydra performance by iteration: 
+{0=0.148, 1=0.036000000000000004, 2=0.024, 3=0.022}
+</code>
+</pre>
+
+
+<h3><a name="distributed"></a><font size="+0">Distributed Execution</font></h3>
+
+To distribute Hydra's SMAC executions, Hydra provides users with the option to store SMAC runs in a database. The database is used to distribute the computation on a cluster by having jobs grabing smac runs from the database in a queue. Once you've setup your database, you can execute an example distributed Hydra run on a TORQUE cluster with the below sequence of call strings. 
+
+<pre>
+<code>
+cd ./example_scenarios/saps
+./run_saps-database.sh --pool hydra_test 
+</code>
+</pre>
+...dispatch Hydra run that stores SMAC runs in a database.
+<pre>
+<code>
+cd ../../scripts
+./dispatch_workers --wall-time 2:00:00:00 --num-workers 25 --pool hydra_test
+</code>
+</pre>
+...dispatches 10 workers (with ./launchworker script) onto a TORQUE cluster for 2 days. You may have to change this script to adapt to your computational environment. (Note: make sure your worker is running in your working directory). Both hydra and the worker jibs *must* have the same --pool parameter.<br><br>
+
+For more detailed information to setup your database, see Section 2.8 of <code>manual.pdf</code>, found within the <code>./doc</code> directory.<br><br>
+
+
+The key differences between the local example and this distributed example are:
+<ul>
+<li>
+Changing the smac-execution-options file to:
+<pre>
+<code>
+tae=MYSQLDB from tae=SMAC
+</pre>
+</code>
+</li>
+<li>
+Add parameter <code>--mysqldbtae-pool</code> to <code>./hydra</code> call string and <code>--pool</code> parameter to ./bin/mysql-worker executable. Both *must* be set to the same string so the worker knows where to find information to run SMAC.
+</li>
+</ul>
+
+
+
+
+
+
+

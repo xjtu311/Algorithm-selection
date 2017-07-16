@@ -1,0 +1,4 @@
+Error occured running SMAC ( NoSuchMethodError : ca.ubc.cs.beta.models.fastrf.RandomForest.classify(Lca/ubc/cs/beta/models/fastrf/RandomForest;[D[D)D)
+Error Log: /Users/Chris/Documents/workspace/hydra/src/dist/example_scenarios/branin/hydra-output/Branin/Hydra-1/smac_runs/Iteration_0_Run_1/log-run625147970.txt
+ca.ubc.cs.beta.models.fastrf.RandomForest.classify(Lca/ubc/cs/beta/models/fastrf/RandomForest;[D[D)D
+[Ljava.lang.StackTraceElement;@2a554e9a

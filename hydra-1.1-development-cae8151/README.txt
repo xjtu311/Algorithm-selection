@@ -1,0 +1,3 @@
+To get started see...
+Quickstart guide : ./doc/quickstart.html
+Hydra manual : ./doc/manual.pdf

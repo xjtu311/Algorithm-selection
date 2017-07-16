@@ -1,0 +1,4 @@
+solver-subset-selector-choice=NONE
+cheap-feature-manager="./cheap-feature-manager.txt"
+aem-choice=LOOKUP
+num-presolvers=2

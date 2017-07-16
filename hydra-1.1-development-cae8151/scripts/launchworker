@@ -1,0 +1,12 @@
+#!/bin/bash
+
+if [[ -n "$PBS_O_WORKDIR" ]]; then
+    cd $PBS_O_WORKDIR
+fi
+
+cd $LOGOUTPUTDIR
+
+$PARENTDIR/../bin/mysql-worker --pool $POOL --runsToBatch 1 --tae SMAC --logOutputDir $LOGOUTPUTDIR
+
+# Option for setting directory for worker logs
+#--logOutputDir output/
