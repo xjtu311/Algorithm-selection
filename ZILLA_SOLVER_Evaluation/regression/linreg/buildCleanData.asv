@@ -1,0 +1,218 @@
+function [output,transformation] = buildCleanData(model_options, namesX, xTrain, yTrain, censTrain, xValid, yValid, censValid, cat, catDomains, numPcaComponents, linearSize, doQuadratic, maxModelSize, responseTransformation, useValid)
+% This takes as inputs the raw data xTrain, xValid, yTrain, yValid
+% available at training time as well as the names of X and the number
+% of parameters. Also some parameters for feature selection.
+% It then does the following:
+% 0. Move all categorical columns of xTrain and xValid to come first.
+% 1. Determine constant columns in xTrain,
+%    remove them from xTrain, xValid, and namesX.
+%    Decrease numparams if one or more of them are constants.
+% 2. Split Xs and names into parameters and features
+% 3. Call Lin's feature selection code to select the most informative
+%    features (no params involved yet)
+% 4. Combine these important features with the parameters
+% 5. Normalize combinations w.r.t. the training data
+% 6. Again, call feature selection software by KLB to select the
+%    most informative combined features
+%    (this 2-way process is necessary since memory otherwise explodes)
+% 7. Transformation of the response variable Y, e.g. log10
+% 8. Return now hopefully clean features and response.
+warning off;
+if isempty(xValid)
+    xValid = xTrain;
+    yValid = yTrain;
+    censValid = censTrain;
+end
+
+%% === Move the categorical columns first in xTrain and xValid.
+transformation.cat = cat;
+cont = setdiff(1:size(xTrain,2), cat);
+
+tmpCat = xTrain(:,cat);
+tmpCont = xTrain(:,cont);
+xTrain = [tmpCat, tmpCont];
+
+tmpCat = xValid(:,cat);
+tmpCont = xValid(:,cont);
+xValid = [tmpCat, tmpCont];
+
+numCatParams = length(cat);
+
+if useValid
+    xTrainAll=[xTrain;xValid];
+else
+    xTrainAll=xTrain;
+end
+
+%% === 1. Transformation of the response variable Y, e.g. log10
+transformation.doQuadratic = doQuadratic;
+
+yTrain = transformResponse(responseTransformation, yTrain);
+yValid = transformResponse(responseTransformation, yValid);
+transformation.responseTransformation = responseTransformation;
+
+%% 2. Determine constant columns in xTrain (also including xValid),
+%    remove them from xTrain, xValid, xTest, and namesX.
+%    Decrease numparams if one or more of them are constants.
+
+constants = determine_constants(xTrainAll);
+
+
+kept_columns = setdiff(1:size(xTrain,2), constants);
+xTrain = xTrain(:,kept_columns);
+xValid = xValid(:,kept_columns);
+xTrainAll = xTrainAll(:,kept_columns);
+namesX = namesX(kept_columns);
+numCatParams= length(find(kept_columns <= numCatParams)); 
+transformation.numCatParams=numCatParams;
+transformation.kept_columns = kept_columns;
+
+%% 3. Split Xs and names into categorical and numerical  
+% we treat numerical parameters the same as other features
+paramsCatTrain = xTrain(:,1:numCatParams);
+xTrain = xTrain(:,numCatParams+1:end);
+paramsCatTrainAll = xTrainAll(:,1:numCatParams);
+xTrainAll = xTrainAll(:,numCatParams+1:end);
+paramsCatValid = xValid(:,1:numCatParams);
+xValid = xValid(:,numCatParams+1:end);
+transformation.namesX=namesX;
+% namesCatParams = namesX(1:numCatParams);
+% namesX = namesX(numCatParams+1:end);
+
+
+%% do something to deal with feats
+% if one feature is too small,then set it to 0 //lin added
+% previous hack has a bug. We need do it in a clear way
+xTrainDefault=xTrain*0+1;
+xTrainDefault(find(xTrain==-512 | xTrain==-1024))=2;
+xValidDefault=xValid*0+1;
+xValidDefault(find(xValid==-512 | xValid==-1024))=2;
+xTrainAllDefault=xTrainAll*0+1;
+xTrainAllDefault(find(xTrainAll==-512 | xTrainAll==-1024))=2;
+
+
+%% 4. PCA (if we do PAC, we can not deal with default values)
+if numPcaComponents>0
+      fprintf('We do not support that! It is in todo list\n'); 
+      fprintf('Becasue we want introduce product of parameters and features \n');
+%       numActualPCAComponents = min([numPcaComponents, size(xTrainAll, 2)]);
+%       [pccoeff, pcVec] = pca(xTrainAll,numActualPCAComponents);
+%       xTrain = xTrain*pcVec;
+%     xValid = xValid*pcVec;
+%     xTrainAll = xTrainAll*pcVec;
+%     transformation.pcVec = pcVec;
+else
+    transformation.pcVec = eye(size(xTrain,2));
+end
+
+%% 5. Call feature selection software by KLB to select the most informative
+%    features 
+
+% here is the code for normalize the data. We only do it for non-cat vlaues
+tmpXTrain=xTrain;
+tmpXValid=xValid;
+% we need to be careful about this. This function gives us scale and
+% bias without considering default values
+
+[nonconstant, scale, bias] = determine_transformation(xTrainAll, xTrainAllDefault, 1);
+xTrainAll = xTrainAll(:,nonconstant);
+xTrainAllDefault = xTrainAllDefault(:,nonconstant);
+tmpXTrain = (tmpXTrain - repmat(bias, [size(tmpXTrain,1),1])) ./ repmat(scale, [size(tmpXTrain,1),1]);
+tmpXValid = (tmpXValid - repmat(bias, [size(tmpXValid,1),1])) ./ repmat(scale, [size(tmpXValid,1),1]);
+% if mean too big or std too small, we may have a prolem. But mean
+% won'tbe too big and if std is too small. we still can treated as 0
+tmpXTrain(find(xTrainDefault> 1))=0;
+tmpXValid(find(xValidDefault>1))=0;
+tmpXTrain=[paramsCatTrain, tmpXTrain];
+tmpXValid=[paramsCatValid, tmpXValid];
+if size(tmpXTrain,2)>linearSize
+    %   [setOfFeatureIndices, bestIndex] = feature_select(tmpXTrain,yTrain,tmpXValid,yValid,namesX, linearSize);%sort
+    [setOfFeatureIndices, bestIndex] = getImportantFeatures(model_options, tmpXTrain, yTrain, censTrain, tmpXValid, yValid, censValid, cat, catDomains, namesX, linearSize);
+    feature_indices = setOfFeatureIndices{bestIndex};
+    
+    xTrain = xTrain(:,feature_indices(find(feature_indices>numCatParams))-transformation.numCatParams);
+    xTrainAll = xTrainAll(:,feature_indices(find(feature_indices>numCatParams))-transformation.numCatParams);
+    xValid = xValid(:,feature_indices(find(feature_indices>numCatParams))-transformation.numCatParams);
+
+    
+    xTrainDefault=xTrainDefault(:, feature_indices(find(feature_indices>numCatParams))-transformation.numCatParams);
+    xTrainAllDefault=xTrainAllDefault(:, feature_indices(find(feature_indices>numCatParams))-transformation.numCatParams);
+    xValidDefault=xValidDefault(:, feature_indices(find(feature_indices>numCatParams))-transformation.numCatParams);
+        
+   
+    transformation.linearFeatureIndices = feature_indices(find(feature_indices>numCatParams));
+    transformation.linearFeatureNames = namesX(feature_indices(find(feature_indices>numCatParams)));
+    transformation.linearCatParamsNames = namesX(feature_indices(find(feature_indices<=numCatParams)));
+    transformation.linearCatParamsIndices=feature_indices(find(feature_indices<=numCatParams));
+    
+    transformation.linearNamesX=namesX(feature_indices);
+    transformation.linearNumCatParams=length(find(feature_indices <= numCatParams));
+else
+    transformation.linearFeatureIndices =  numCatParams+1:length(namesX);
+    transformation.linearCatParamsIndices= 1:numCatParams;
+    transformation.linearNamesX=namesX;
+    transformation.linearNumCatParams=numCatParams;
+    transformation.linearFeatureNames = namesX(transformation.linearFeatureIndices);
+    transformation.linearCatParamsNames = namesX(transformation.linearCatParamsIndices);
+end
+
+
+%% 6. Combine these important features with the parameters
+%  TODO: Build clean interface allowing to specify the desired order of the
+%  parameters and the instance features. Currently, this is a HACK.
+[xTrain, foo, Aid, Bid] = buildBasisFunctions(xTrain, transformation.linearFeatureNames, doQuadratic);
+[xTrainDefault, foo, Aid, Bid] = buildBasisFunctions(xTrainDefault, transformation.linearFeatureNames, doQuadratic);
+[xValid, foo, Aid, Bid] = buildBasisFunctions(xValid, transformation.linearFeatureNames, doQuadratic);
+[xValidDefault, foo, Aid, Bid] = buildBasisFunctions(xValidDefault, transformation.linearFeatureNames, doQuadratic);
+[xTrainAll, namesX, Aid, Bid] = buildBasisFunctions(xTrainAll, transformation.linearFeatureNames, doQuadratic);
+[xTrainAllDefault, namesX, Aid, Bid] = buildBasisFunctions(xTrainAllDefault, transformation.linearFeatureNames, doQuadratic);
+
+%% 7. Normalize combinations w.r.t. the training data
+%%% I just turn this off for mixture of expert %%%%
+
+[nonconstant, scale, bias] = determine_transformation(xTrainAll, xTrainAllDefault, 1);
+xTrain = xTrain(:,nonconstant);
+xValid = xValid(:,nonconstant);
+xTrain = (xTrain - repmat(bias, [size(xTrain,1),1])) ./ repmat(scale, [size(xTrain,1),1]);
+xValid = (xValid - repmat(bias, [size(xValid,1),1])) ./ repmat(scale, [size(xValid,1),1]);
+transformation.nonconstant = nonconstant;
+transformation.scale=scale;
+transformation.bias=bias;
+
+%% 8. Again, call feature selection software by KLB to select the
+%    most informative combined features
+%    (this 2-way process is necessary since memory otherwise explodes)
+%if size(xTrain,2)>maxModelSize
+% TODO: klb_feature_select: return all subsets of features up to that size.
+
+tmpXTrain=xTrain;
+tmpXValid=xValid;
+tmpXTrain(find(xTrainDefault> 1))=0;
+tmpXValid(find(xValidDefault>1))=0;
+tmpXTrain=[paramsCatTrain(:,transformation.linearCatParamsIndices), tmpXTrain];
+tmpXValid=[paramsCatValid(:,transformation.linearCatParamsIndices), tmpXValid];
+
+if (maxModelSize >0 && maxModelSize<size(tmpXTrain,2))
+    %[setOfFeatureIndices, bestIndex] = feature_select(tmpXTrain,yTrain,tmpXValid,yValid, [transformation.linearCatParamsNames;namesX], maxModelSize);%sort
+    [setOfFeatureIndices, bestIndex] = getImportantFeatures(model_options, tmpXTrain, yTrain, censTrain, tmpXValid, yValid, censValid, cat, catDomains, [transformation.linearCatParamsNames;namesX], maxModelSize);
+    
+else
+    setOfFeatureIndices={[1:size(tmpXTrain,2)]};
+    bestIndex=1;
+end
+    transformation.setOfFinalFeatureIndices = setOfFeatureIndices;
+    transformation.bestIndexForFinalFeatures = bestIndex;
+    feature_indices = setOfFeatureIndices{bestIndex};
+    transformation.finalFeatureIndices=feature_indices(find(feature_indices>length(transformation.linearCatParamsIndices)));
+    transformation.finalCatParamsIndices=feature_indices(find(feature_indices<=length(transformation.linearCatParamsIndices)));
+    namesXfoo=[transformation.linearCatParamsNames;namesX];
+    transformation.finalNamesX=namesXfoo(feature_indices);
+    transformation.finalFeatureNames=namesXfoo(feature_indices(find(feature_indices>length(transformation.linearCatParamsIndices))));
+    transformation.finalCatParamsNames=namesXfoo(feature_indices(find(feature_indices<=length(transformation.linearCatParamsIndices))));
+    output=tmpXTrain(:,feature_indices);
+    
+%else
+%    transformation.quadraticFeatureIndices = 1:size(xTrain,2);
+%end
+
+

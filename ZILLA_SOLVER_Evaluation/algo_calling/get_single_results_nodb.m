@@ -1,0 +1,201 @@
+function [ys, censoreds, runtimes, runlengths, solveds, best_sols] = get_single_results_nodb(func, Theta_idx, seeds, instance_filenames, censorLimits)
+%=== Returns the performance (e.g. runtime/runlength) of the algorithm for the parameter configurations indexed by Theta_idx on the given instances with the given seeds.
+%=== Always call a script via the command line that executes the runs.
+
+if length(seeds) > 10
+    seeds
+end
+
+global TestTheta;
+global ThetaUniqSoFar;
+
+if nargin < 5
+    error 'need 9 arguments' 
+end
+
+numTry = 1;
+while 1
+    try % watch our for any exception from calling the target algorithm.
+        [solveds, censoreds, runtimes, runlengths, best_sols] = startRunsInBatch(func, Theta_idx, instance_filenames, seeds, censorLimits);
+        break;
+    catch ME
+        bout(strcat(['Num try: ', num2str(numTry)]));
+        bout(ME.message);
+        for i=1:length(ME.stack)
+            bout(strcat(['In method ', ME.stack(i).file, ' at line ', num2str(ME.stack(i).line), '\n']));
+        end
+        numTry = numTry+1;
+        if numTry >= 20
+            func
+            error('Still not successful after 20 tries.');
+        end
+    end
+end
+
+global runTimeForRunningAlgo;
+assert(all(runtimes >= -1e-5));
+actual_runtimes = min([censorLimits'; runtimes'], [], 1); % to deal with inf in runs with wrong answer
+runTimeForRunningAlgo = runTimeForRunningAlgo + sum(actual_runtimes);
+
+switch func.singleRunObjective
+    case 'runtime'
+        ys = runtimes;
+    case 'runlength'    
+        ys = runlengths;
+    case 'solqual'
+        ys = best_sols;
+        censoreds = zeros(size(ys,1),1);
+    otherwise 
+        error 'Still have to implement objective functions for single algorithm runs other than runtime, runlength, and solqual.'
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+% HELPER FUNCTIONS 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+function delete_files(files_to_delete)
+%=== Clean up files in directory RUNFILES - can't do earlier due to weird
+%=== error (probably since Matlab is looking ahead, executing the delete
+%=== too early?)
+for i=1:length(files_to_delete)
+    fprintf(strcat('Deleting file: ', files_to_delete{i}, '\n'));
+    delete(files_to_delete{i});
+end
+
+function [solveds, censoreds, runtimes, runlengths, best_sols] = startRunsInBatch(func, Theta_idx, instance_filenames, seeds, censorLimits)
+%=== This starts a batch of runs, parses the results and returns them.
+[files_to_delete, results] = startManyRuns(func, Theta_idx, instance_filenames, seeds, censorLimits, 1);
+solveds = -ones(length(seeds),1);
+censoreds = -ones(length(seeds),1);
+runtimes = -ones(length(seeds),1);
+solveds = -ones(length(seeds),1);
+runlengths = -ones(length(seeds),1);
+best_sols = -ones(length(seeds),1);
+
+for i=1:length(seeds)
+    res = results(i,:);
+    seed_out = res(end);    
+    assert(seeds(i) == seed_out);
+
+    solved = res(end-4);
+    solveds(i) = solved;
+    if solved == 3 % wrong answer!
+        warnstring = strcat(['Wrong answer for theta_idx ', num2str(Theta_idx(i)), ', instance ', instance_filenames{i}, ', and seed ', num2str(seeds(i)), '.\n']);
+        warning(warnstring);
+        bout(warnstring);
+
+        censoreds(i) = 1;
+        runtimes(i) = inf;
+        runlengths(i) = inf;
+        best_sols(i) = inf;
+    else
+        if solved == 0 % TIMEOUT
+            censoreds(i) = 1;
+        else
+            censoreds(i) = 0;
+        end
+        runtimes(i) = res(end-3);
+        runlengths(i) = res(end-2);
+        best_sols(i) = res(end-1);
+    end
+end
+delete_files(files_to_delete);
+
+
+function [remote_files_to_delete, res] = startManyRuns(func, Theta_idx, instance_filenames, seeds, censorLimits, waitToFinish, name) 
+remote_files_to_delete = [];
+if nargin < 7
+    name = 'manyruns';
+end
+
+% Don't want to rewrite all the functionality of adding inst_id,
+% algo_config_id (!) and algorun_config_id to the database.
+% Rather use the existing ruby scripts to do that, we only use
+% Matlab for queries: simply write a file where each line is a
+% call to single_runstarter.rb
+env = func.env;
+global allParamStrings;
+global clusterize;
+global numrun
+subRunClusterize = 0;
+run_cmds = {};
+
+%=== Create file with commands to run.
+s = rand('state');
+deldir_post = strcat('DEL_RUNFILES/');
+if ~exist(strcat(func.outdir, '/', deldir_post), 'dir')
+    mkdir(strcat(func.outdir, '/', deldir_post));
+end
+
+for openTry=1:100
+    file_with_cmds = strcat(deldir_post,strrep(strrep(datestr(now), ' ', '-'), ':', '-'), '--', num2str(rand));
+    remote_file_with_cmds = strcat(func.remote_outdir, file_with_cmds);
+    file_with_cmds = strcat(func.outdir, file_with_cmds);
+    
+    cmds_fid = fopen(file_with_cmds,'w');
+    if cmds_fid ~= -1 
+        break
+    end
+    bout(strcat(['Try ', num2str(openTry), ' failed to open file: ', file_with_cmds, '\n']));
+    if openTry == 100
+        errstr = strcat(['Cannot open file to write callstrings to: ', file_with_cmds, '\n']);
+        error(errstr);
+    end
+end
+rand('state', s);
+
+outfile = strcat(deldir_post, env.algo, '-', random_string(), '-out.txt');
+remote_outfile = strcat(func.remote_outdir, outfile);
+outfile = strcat(func.outdir, outfile);
+
+%=== Run the commands in the file, if clusterize then on the cluster.
+global TestTheta;
+fprintf(cmds_fid, strcat([env.executable, '\n', env.exec_path, '\n', env.params_filename, '\n', num2str(-1), '\n']));
+
+for i=1:length(Theta_idx)
+    %=== Construct param_string.
+    theta_idx = Theta_idx(i);
+    if theta_idx < 0
+        param_string = alphabeticalParameterString(func, TestTheta(-theta_idx,:));
+    else
+        param_string = allParamStrings{theta_idx};
+    end
+    fprintf(cmds_fid, strcat([instance_filenames{i}, ' ', num2str(num2str(seeds(i))), ' ', num2str(censorLimits(i)), ' ', param_string, '\n']));
+end
+try
+    fclose(cmds_fid); % throws error if we're deleting the file after.
+catch ME
+    bout(strcat(['Cannot close cmds_fid: ', num2str(cmds_fid), ' for file ', file_with_cmds]));
+end
+remote_files_to_delete = {file_with_cmds}; % remote_file_with_cmds
+
+run_cmd = strcat(['ruby scripts/al_run_configs_in_file_nodb.rb ', remote_file_with_cmds]);
+run_cmd = strcat([run_cmd, ' ', remote_outfile]);
+    
+if isunix
+    connect_cmd = strcat(['cd ' env.script_path '; ']);
+    cmd = strcat([connect_cmd ' ' run_cmd])
+    [a,b] = unix(cmd);
+    a
+    b
+else
+    %                error('Dont want to run algos from DOS')
+    connect_cmd = strcat(['ruby remote_executer.rb ' env.script_path]);
+    cmd = strcat([connect_cmd ' ' quote(run_cmd)])
+    [a,b] = dos(cmd);
+end
+
+res = csvread(outfile);
+remote_files_to_delete{end+1} = outfile;
+
+%=== Quote a string: replace " by \" to run the command remotely.
+function quoted = quote(string)
+quoted = regexprep(string, '"', '\\"');
+
+
+function str = random_string
+s = rand('twister');
+rn = rand;
+rand('twister',s);
+str = datestr(now, 'mmmm_dd_yyyy_HH_MM_SS_FFF');
+str = strcat(str, '-', num2str(rn));

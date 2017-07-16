@@ -1,0 +1,46 @@
+%% this code are used for compute the score for testing. it also compute
+%% every reference score and so on
+%% it use te same score function as before and treat the test data as a
+%% real sat competition
+%% the first one is the SATzilla runtime data
+%% 10-7-2007
+
+%% compute score for every canadidate solver based on some given reference
+%% solvers. (The solvers which compete with SATzilla in SAT competition)
+
+function [yData, avgTime, Solved] = time2scoretest(yDataAll, yReference, cutoff, scoreClass)
+tmpYdata=[yDataAll, yReference,min(yReference,[],2)];
+yDataAll = tmpYdata;
+avgTime = mean(yDataAll,1);
+if strcmp(scoreClass, 'PAR10')
+    tmpYdata(find(tmpYdata>=cutoff))=cutoff*10;
+    yData=cutoff*10 - tmpYdata;
+    tmpYdata(find(tmpYdata<cutoff))=1;
+    tmpYdata(find(tmpYdata>=cutoff))=0;
+    Solved=sum(tmpYdata,1)/size(tmpYdata,1);
+    yData=sum(yData,1);
+end
+if strcmp(scoreClass, 'PAR1')
+    tmpYdata(find(tmpYdata>=cutoff))=cutoff*10;
+    yData=cutoff*10 - tmpYdata;
+    tmpYdata(find(tmpYdata<cutoff))=1;
+    tmpYdata(find(tmpYdata>=cutoff))=0;
+    Solved=sum(tmpYdata,1)/size(tmpYdata,1);
+    yData=sum(yData,1);
+end
+if strcmp(scoreClass, 'PAR10')
+    tmpYdata(find(tmpYdata>=cutoff))=cutoff*10;
+    yData=cutoff*10 - tmpYdata;
+    tmpYdata(find(tmpYdata<cutoff))=1;
+    tmpYdata(find(tmpYdata>=cutoff))=0;
+    Solved=sum(tmpYdata,1)/size(tmpYdata,1);
+    yData=sum(yData,1);
+end
+if strcmp(scoreClass, 'PAR10')
+    tmpYdata(find(tmpYdata>=cutoff))=cutoff*10;
+    yData=cutoff*10 - tmpYdata;
+    tmpYdata(find(tmpYdata<cutoff))=1;
+    tmpYdata(find(tmpYdata>=cutoff))=0;
+    Solved=sum(tmpYdata,1)/size(tmpYdata,1);
+    yData=sum(yData,1);
+end

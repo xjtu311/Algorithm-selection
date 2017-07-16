@@ -1,0 +1,115 @@
+function Tree=fh_simple_random_regtreefit_algoParams_instFeats_c(X,y,cens,Splitmin,percentageFeatures,Catidx,seed,logModel,domains_cat)
+%TREEFIT Fit a tree-based model for regression.
+% if logModel==1, then we're being passed log data. Untransform it, and
+% tell the RF to logify it again.
+
+% p: how much to force splits on parameters; infty->only force splits for 2
+% nodes; 0: always split on params; 1: linear increase of probability with
+% the logarithmic number of nodes left in the subtree
+p = inf; 
+numAlgoParams = size(X,2); % we treat algo params and instance features exactly the same, regardless of p
+kappa = inf;
+cutoff_penalty_factor = 1;
+overallobj = 'mean';
+
+if nargin < 9
+    error 'Too few arguments'
+end
+
+% Process inputs
+[N,k] = size(X);
+if N==0 || k==0
+    error('X has to be at least 1-dimensional.')
+end
+if ~isnumeric(y)
+   error('Only regression trees implemented, y has to be numeric')
+end
+
+t = any(isnan(X),2);
+t = t | any(isinf(X),2);
+t = t | isnan(y);
+t = t | isinf(y);
+t = t | isnan(cens);
+t = t | isinf(cens);
+if any(t)
+    error 'Empty values and infinity not allowed in either X, y, or cens.'
+end
+if any(cens)
+    error 'censored data points => should be dealt with by censored tree; not supported right now'
+end
+
+if logModel
+%     y = 10.^y;
+    logModel = 0;
+end
+
+iscat = zeros(size(X,2),1); 
+all_domains_cat = cell(size(X,2),1); 
+for i=1:length(Catidx)
+    iscat(Catidx(i)) = 1;
+    if isempty(domains_cat)
+        all_domains_cat{Catidx(i)} = int32(unique(X(:,Catidx(i))));
+    else
+        all_domains_cat{Catidx(i)} = int32(1:length(domains_cat{Catidx(i)}));
+    end
+end
+
+for i=1:length(iscat)
+    if iscat(i)
+        assert(max(X(:,i) <= length(all_domains_cat{i});
+    end
+end
+
+%=== Build the tree with the MEXed function.
+[nodenumber_m, parent_m, yfitnode_m, ysub_m, cutvar_m, cutpoint_m, leftchildren_m, rightchildren_m, resuberr_m, nodesize_m, catsplit_m, leaf_g, leaf_m, leaf_n, topnode_m, ncatsplit_m] = fh_random_regtreefit_big_leaves_twofeaturetypes_dist_partition(X,y,int32(Splitmin),int32(numAlgoParams),p, percentageFeatures,int32(iscat), all_domains_cat, kappa, cutoff_penalty_factor, int32(seed), int32(logModel));
+Tree = maketree_ysub_dist(X, Catidx, nodenumber_m, parent_m, yfitnode_m, ysub_m, cutvar_m, cutpoint_m, leftchildren_m, rightchildren_m, resuberr_m, nodesize_m, catsplit_m, leaf_g, leaf_m, leaf_n, topnode_m, ncatsplit_m, overallobj);
+
+function Tree = maketree_ysub_dist(X, Catidx, nodenumber, parent, yfitnode, ysub, cutvar, cutpoint, leftchildren, rightchildren, resuberr, nodesize, catsplit, leaf_g, leaf_m, leaf_n, topnode, ncatsplit, overallobj)
+Tree.node      = nodenumber(1:topnode);
+Tree.parent    = parent(1:topnode);
+Tree.class     = yfitnode(1:topnode);
+Tree.ysub      = ysub(1:topnode);
+Tree.var       = cutvar(1:topnode);
+Tree.cut       = cutpoint(1:topnode);
+Tree.children  = [leftchildren(1:topnode), rightchildren(1:topnode)];
+Tree.nodeerr   = resuberr(1:topnode);
+Tree.nodesize  = nodesize(1:topnode);
+Tree.npred     = size(X,2);
+Tree.leaf_g = leaf_g(1:topnode);
+Tree.leaf_m = leaf_m(1:topnode);
+Tree.leaf_n = leaf_n(1:topnode);
+idx = intersect(find(Tree.children(:,1)==0), find(Tree.leaf_n==0));
+assert(isempty(idx));
+
+Tree.catcols   = Catidx;
+Tree.method    = 'regression';
+Tree.catsplit  = catsplit(1:ncatsplit,:); % list of all categorical predictor splits
+% for i=1:topnode
+%     Tree.class(i) = mean(ysub{i});
+% end
+Tree.is_censored = cell(length(Tree.ysub),1);
+for i=1:length(Tree.ysub)
+    Tree.is_censored{i} = int32(zeros(length(Tree.ysub{i}),1));
+    %=== Not using a distribution at all for mean and variance in leaf.
+    Tree.leaf_mean(i,1) = mean(ysub{i});
+    Tree.leaf_var(i,1) = 0;
+end
+if strcmp(overallobj, 'median')
+    Tree.leaf_median = zeros(topnode,1);
+    for i=1:topnode
+        Tree.leaf_median(i) = median(ysub{i});
+        Tree.class(i) = Tree.leaf_median(i);
+    end
+else
+    Tree.emp_mean_at_leaf = zeros(topnode,1);
+    for i=1:topnode
+        Tree.emp_mean_at_leaf(i) = Tree.leaf_mean(i,1); % mean(ysub{i});
+        Tree.class(i) = Tree.emp_mean_at_leaf(i);
+    end
+end
+
+% not implemented - just here for compatibility!!!
+Tree.nodeprob= -ones(topnode,1); % not supported
+Tree.minval  = -ones(topnode,1); % not supported
+Tree.maxval  = -ones(topnode,1); % not supported
+Tree.risk    = -ones(topnode,1); % not supported

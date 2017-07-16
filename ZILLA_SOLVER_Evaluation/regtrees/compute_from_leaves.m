@@ -1,0 +1,59 @@
+function [means, vars, tree_means] = compute_from_leaves(modules, Theta_idx, X, deterministic, Theta_is_idx)
+if nargin < 5
+    Theta_is_idx=0;
+end
+if deterministic
+    warning 'make sure everything implemented correctly for deterministic algorithms'
+end
+
+M = length(modules);
+if Theta_is_idx
+    global ThetaUniqSoFar;
+    numThetas = length(Theta_idx);
+    Theta = ThetaUniqSoFar(Theta_idx,:); % currently all of them, but can use subset and then we have the indices.
+else
+    numThetas = size(Theta_idx,1);
+    Theta = Theta_idx;
+end
+
+%=== For each tree, get the leaves.
+cell_of_leaves = cell(1,M);
+%leaf_count = 0;
+
+for m=1:M
+    %cell_of_leaves{m} = fh_treeval_thetas_pis_matlab(RF{m},Theta,X);
+    cell_of_leaves{m} = fh_treeval_thetas_pis(modules{m}.T,Theta,X);
+%    leaf_count = leaf_count + length(cell_of_leaves{m});
+end
+
+[means, vars, tree_means] = compute_from_leaves_part(cell_of_leaves, int32(numThetas), int32(size(X,1)), int32(deterministic));
+% assertVectorEq(means, means2);
+% assertVectorEq(vars, vars2);
+% assertVectorEq(tree_means, tree_means3);
+
+% test of compute_from_leaves
+% incsum=0; for i=1:5, incsum = incsum + length(cell_of_leaves{1}{i}{2}) *
+% sum(cell_of_leaves{1}{i}{3})/length(cell_of_leaves{1}{i}{3}); incsum/2000, end
+
+assert(~any(isnan(vars)));
+assert(all(vars>-1e-10)); % numerical problems can make variance a tiny bit negative, but noch much - more would probably be due to a bug.
+vars = max(vars, 1e-14); % make variance positive.
+
+
+
+function is_part = is_partitioning(cell_of_leaves, nTheta, nPi)
+touched = zeros(nTheta, nPi);
+for i=1:length(cell_of_leaves)
+    leaf = cell_of_leaves{i};
+    assert(all(all(touched(leaf{1},leaf{2})==0)));
+    touched(leaf{1},leaf{2}) = 1;
+end
+is_part = all(all(touched==1));
+
+function cover = cover_all(cell_of_leaves, nTheta, nPi)
+touched = zeros(nTheta, nPi);
+for i=1:length(cell_of_leaves)
+    leaf = cell_of_leaves{i};
+    touched(leaf{1},leaf{2}) = 1;
+end
+cover = all(all(touched==1));

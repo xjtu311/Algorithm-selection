@@ -1,0 +1,15 @@
+function model = learnModel(X, y, cens, cat, catDomains, al_opts, names, varargin)
+if nargin < 7
+    names = {};
+end
+%=== Wrapper around initializing a model and then preparing it for prediction.
+[tmp,transformation] = buildCleanData(xTrain, xValid, yTrain, yValid, names, cat, options.pca, linearSize, doQuadratic, maxModelSize, responseTransformation, 0);
+[X, y] = formatData(X, y, transformation);
+
+model = initModel(X, y, cens, cat, catDomains, al_opts, names);
+if isfield(al_opts, 'params_to_use')
+    model.params = al_opts.params_to_use;
+else
+    model = optimizeModel(model, varargin{:});
+end
+model = prepareModel(model);

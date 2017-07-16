@@ -1,0 +1,14 @@
+%% compute the loss of classification.
+function loss = compLossSVM(score1, score2, prediction)
+if abs(std([length(score1), length(score2), length(prediction)]))>0
+    fprintf('Error, the inputs for computing loss should have the same length!\n');
+    loss = 1e100;
+else 
+    maxcost=sum(abs(score1-score2));
+    predscore=score1;
+    predscore(find(prediction<=0))=score2(find(prediction<=0));
+    mycost=sum(abs(predscore-max(score1, score2)));
+    loss = mycost/maxcost;
+    
+end
+end

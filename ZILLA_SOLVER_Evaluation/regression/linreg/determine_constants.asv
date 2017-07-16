@@ -1,0 +1,21 @@
+function constants = determine_constants(xTrain)
+
+maxX = max(xTrain,[],1);
+minX = min(xTrain,[],1);
+
+diffX = maxX-minX;
+constants = find(diffX <= 1e-6);
+
+fprintf('Discarding %i constant features of %i in total.', length(constants), size(xTrain,2));
+
+
+%=== Filter out constant columns.
+num_nonconstant = 0;
+for i=1:dim
+    if scale(i) >= 1e-6
+        num_nonconstant = num_nonconstant+1;
+        nonconstant(num_nonconstant) = i;
+    end
+end
+bias = bias(nonconstant);
+scale = scale(nonconstant);

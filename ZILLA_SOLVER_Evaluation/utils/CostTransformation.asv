@@ -1,0 +1,15 @@
+function cost=CostTransformation(realcost, type)
+  if strcomp(typp,'UNIFORM_COST')
+       cost = realcost*0+1;
+       return;
+  end
+    if strcomp(type, 'RAW_COST'
+       cost = abs(realcost);
+       return;
+    end
+    if type == 'SQRT_COST'
+       cost = sqrt(abs(cost));
+       return;
+    end
+    fprintf('This code does not supoort cost type %s!', type);
+end

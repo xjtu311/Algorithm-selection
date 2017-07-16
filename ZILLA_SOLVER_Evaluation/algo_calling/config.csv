@@ -1,0 +1,3 @@
+executable, "ruby saps_wrapper.rb"
+execdir, example_saps
+paramfile, saps-params.txt
